@@ -47,7 +47,7 @@ SpringBoot之所以可以做到简化配置文件直接启动，无外乎是其�
 
 > **SPI** ，全称为 Service Provider Interface(服务提供者接口)，是一种服务发现机制。它通过在classpath路径下的`META-INF/services`文件夹查找文件，自动加载文件中所定义的类。
 
-> SpringBoot 定义了一套接口规范，这套规范规定：**SpringBoot 在启动时会扫描外部引用 jar 包中的`META-INF/spring.factories`文件，将文件中配置的类型信息加载到 Spring 容器**（此处涉及到 JVM 类 加载机制与 Spring 的容器知识），**并执行类中定义的各种操作**。对于外部 jar 来说，只需要按照 SpringBoot 定义的标准，就能将自己的功能装置进 SpringBoot。
+> SpringBoot 定义了一套接口规范，这套规范规定：**SpringBoot 在启动时会扫描外部引用 jar 包中的`META-INF/spring.factories`文件，将文件中配置的类型信息加载到 Spring 容器**(此处涉及到 JVM 类 加载机制与 Spring 的容器知识)，**并执行类中定义的各种操作**。对于外部 jar 来说，只需要按照 SpringBoot 定义的标准，就能将自己的功能装置进 SpringBoot。
 
 没有 Spring Boot 的情况下，如果我们需要引入第三方依赖，需要手动配置，非常麻烦。但是，Spring Boot 中，我们直接引入一个 starter 即可。引入 starter 之后，我们通过少量注解和一些简单的配置就能使用第三方组件提供的功能了。
 
@@ -65,7 +65,7 @@ SpringBoot提供了我们快速创建SpringBoot项目的地方：[https://start.
 
 我们只需要填完上述信息，点击Generate，就可以直接将一个SpringBoot项目下载下来，然后导入我们的IDE，Eclipse或者IDEA都可，之后就可以直接将它运行起来。
 
-### SSM方式（用来对比）
+### SSM方式(用来对比)
 
 反观过去SSM框架的SpringMVC配置，我这里有一份留存的大家可以对比一下。
 
@@ -124,7 +124,7 @@ spring-web.xml:
     <!-- 4.扫描web相关的bean -->
     <context:component-scan base-package="com.SchoolShop.o2o.web" />
     <!-- 5.权限拦截器 -->
-</beans>COPY
+</beans> 
 ```
 
 web.xml:
@@ -142,14 +142,14 @@ web.xml:
     <servlet-name>spring-dispatcher</servlet-name>
     <!-- 默认匹配所有请求 -->
     <url-pattern>/</url-pattern>
-  </servlet-mapping>COPY
+  </servlet-mapping> 
 ```
 
 可以看到，这里需要配置两个文件，web.xml和spring-web.xml，配置可以说是相当繁重。
 
 那么相对于这个，SpringBoot的开箱即用就显得特别方便。
 
-## 四、（重点）SpringBoot 是如何实现自动装配的？
+## 四、(重点)SpringBoot 是如何实现自动装配的？
 
 我们从 **pom.xml** 开始进行分析
 
@@ -181,15 +181,17 @@ web.xml:
 
 再点 `spring-boot-dependencies` 进去，可以发现里面放了很多的依赖和依赖的版本号。由于这个文件实在太长了，所以这里只展示一部分。
 
-![spring-boot-dependencies 部分代码](images/Springboot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E4%B8%8EStarter%E5%8E%9F%E7%90%86/202109161037697.jpeg)
+<img src="images/Springboot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E4%B8%8EStarter%E5%8E%9F%E7%90%86/image-20230222161411871.png" alt="image-20230222161411871" style="zoom:50%;" />
 
-![spring-boot-dependencies 部分代码](images/Springboot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E4%B8%8EStarter%E5%8E%9F%E7%90%86/202109161037773.jpeg)
 
-**得出第一个结论**：
 
-spring-boot-dependencies:作为父工程，存放了SpringBoot的核心依赖。我们在写或者引入一些SpringBoot依赖的时候，不需要指定版本，正是因为SpringBoot的父依赖已经帮我们维护了一套版本。
+<img src="images/Springboot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E4%B8%8EStarter%E5%8E%9F%E7%90%86/image-20230222161435648.png" alt="image-20230222161435648" style="zoom:50%;" />
 
-另外我们还可以看到，在父依赖中也帮我们写好了资源库，不用我们自己再去配置了。
+> **得出第一个结论**：
+>
+> * spring-boot-dependencies:作为父工程，存放了SpringBoot的核心依赖。我们在写或者引入一些SpringBoot依赖的时候，不需要指定版本，正是因为SpringBoot的父依赖已经帮我们维护了一套版本。
+
+* 在父依赖中也帮我们写好了资源库，不用我们自己再去配置了。
 
 ```xml
 <resources>
@@ -223,7 +225,7 @@ spring-boot-dependencies:作为父工程，存放了SpringBoot的核心依赖。
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter</artifactId>
     <version>2.2.1.RELEASE</version>
-</dependency>COPY
+</dependency>
 ```
 
 启动器就是SpringBoot的启动场景，比如我们要使用web相关的，那么就直接引入spring-boot-starter-web，那么他就会帮我们自动导入web环境下所有必需的依赖。
@@ -268,16 +270,18 @@ spring-boot-dependencies:作为父工程，存放了SpringBoot的核心依赖。
       <artifactId>snakeyaml</artifactId>
       <version>1.25</version>
       <scope>runtime</scope>
-    </dependency>COPY
+    </dependency> 
 ```
 
-其中存放了**自动配置相关的依赖、日志相关依赖、还有Spring-core**等依赖，这些依赖我们只需要导入一个spring-boot-starter就可以直接将其全部引入，而不需要再像以前那样逐个导入了。
-
-**SpringBoot会将所有的功能场景都封装成一个一个的启动器，供开发人员使用**。
-
-我们在使用的时候也可以直接去官网上找我们所需的启动器，直接将其引入。
-
-获取启动器文档：[https://docs.spring.io/spring-boot/docs/2.2.1.RELEASE/reference/html/using-spring-boot.html#using-boot-starter](https://docs.spring.io/spring-boot/docs/2.2.1.RELEASE/reference/html/using-spring-boot.html#using-boot-starter)
+> 其中存放了**自动配置相关的依赖、日志相关依赖、还有Spring-core**等依赖，这些依赖我们只需要导入一个spring-boot-starter就可以直接将其全部引入，而不需要再像以前那样逐个导入了。
+>
+> **SpringBoot会将所有的功能场景都封装成一个一个的启动器，供开发人员使用**。
+>
+> 我们在使用的时候也可以直接去官网上找我们所需的启动器，直接将其引入。
+>
+> 
+>
+> 获取启动器文档：[https://docs.spring.io/spring-boot/docs/2.2.1.RELEASE/reference/html/using-spring-boot.html#using-boot-starter](https://docs.spring.io/spring-boot/docs/2.2.1.RELEASE/reference/html/using-spring-boot.html#using-boot-starter)
 
 ### 主程序
 
@@ -288,7 +292,7 @@ public class SpringbootdemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringbootdemoApplication.class, args);
     }
-}COPY
+} 
 ```
 
 再写SpringBoot项目的时候，总要写这么一个主程序，这个主程序最大的特点就是其类上放了一个@SpringBootApplication注解，这也正是SpringBoot项目启动的核心，也是我们要研究的重点。
@@ -325,13 +329,13 @@ public @interface SpringBootConfiguration {
 }
 ```
 
-大概可以把 `@SpringBootApplication`看作是 `@Configuration`、`@EnableAutoConfiguration`、`@ComponentScan` 注解的集合。根据 SpringBoot 官网，这三个注解的作用分别是：
-
-- `@EnableAutoConfiguration`：**启用 SpringBoot 的自动配置机制**
-- `@Configuration`：允许在上下文中注册额外的 bean 或导入其他配置类
-- `@ComponentScan`： 扫描被`@Component` (`@Service`,`@Controller`)注解的 bean，注解**默认会扫描启动类所在的包下所有的类** ，可以自定义不扫描某些 bean。
-
-`@EnableAutoConfiguration` 是实现自动装配的重要注解，我们以从这个注解入手。
+> 大概可以把 `@SpringBootApplication`看作是 `@Configuration`、`@EnableAutoConfiguration`、`@ComponentScan` 注解的集合。根据 SpringBoot 官网，这三个注解的作用分别是：
+>
+> - `@EnableAutoConfiguration`：**启用 SpringBoot 的自动配置机制**
+> - `@Configuration`：允许在上下文中注册额外的 bean 或导入其他配置类
+> - `@ComponentScan`： 扫描被`@Component` (`@Service`,`@Controller`)注解的 bean，注解**默认会扫描启动类所在的包下所有的类** ，可以自定义不扫描某些 bean。
+>
+> `@EnableAutoConfiguration` 是实现自动装配的重要注解，我们以从这个注解入手。
 
 ### `@EnableAutoConfiguration`：实现自动装配的核心注解
 
@@ -365,7 +369,7 @@ public @interface EnableAutoConfiguration {
 而这些配置都从getCandidateConfiguration中获取，
 这个方法是用来获取候选的配置。
 */
-List<String> configurations = getCandidateConfigurations(annotationMetadata, attributes);COPY
+List<String> configurations = getCandidateConfigurations(annotationMetadata, attributes); 
 ```
 
 #### `getAutoConfigurationEntry()`:
@@ -397,7 +401,7 @@ public String[] selectImports(AnnotationMetadata annotationMetadata) {
             return NO_IMPORTS;
         } else {
           //<2>.获取所有需要装配的bean
-            AutoConfigurationMetadata autoConfigurationMetadata = AutoConfigurationMetadataLoader.loadMetadata(this.beanClassLoader);
+           AutoConfigurationMetadata autoConfigurationMetadata = AutoConfigurationMetadataLoader.loadMetadata(this.beanClassLoader);
             AutoConfigurationImportSelector.AutoConfigurationEntry autoConfigurationEntry = this.getAutoConfigurationEntry(autoConfigurationMetadata, annotationMetadata);
             return StringUtils.toStringArray(autoConfigurationEntry.getConfigurations());
         }
@@ -444,7 +448,7 @@ AutoConfigurationEntry getAutoConfigurationEntry(AutoConfigurationMetadata autoC
 
 ![第 2 步](images/Springboot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E4%B8%8EStarter%E5%8E%9F%E7%90%86/202109152024799.png)
 
-##### **第 3 步**：获取需要自动装配的所有配置类（重要方法——`getCandidateConfigurations()`）
+##### **第 3 步**：获取需要自动装配的所有配置类(重要方法——`getCandidateConfigurations()`)
 
 获取需要自动装配的所有配置类，读取`META-INF/spring.factories`
 
@@ -480,7 +484,7 @@ spring-boot/spring-boot-project/spring-boot-autoconfigure/src/main/resources/MET
         Assert.notEmpty(configurations, "No auto configuration classes found in META-INF/spring.factories. If you "
                 + "are using a custom packaging, make sure that file is correct.");
         return configurations;
-    }COPY
+    } 
 ```
 
 实际上它返回了一个List，这个List是由**loadFactoryNames()**方法返回的,其中传入了一个getSpringFactoriesLoaderFactoryClass()，我们可以看看这个方法的内容。
@@ -488,7 +492,7 @@ spring-boot/spring-boot-project/spring-boot-autoconfigure/src/main/resources/MET
 ```java
    protected Class<?> getSpringFactoriesLoaderFactoryClass() {
     return EnableAutoConfiguration.class;
-   }COPY
+   } 
 ```
 
 我们看到了一个眼熟的词 —— **EnableAutoConfiguration**，也就是说，它实际上返回的就是标注了这个类的所有包。标注了这个类的包不就是@SpringBootApplication吗？
@@ -499,7 +503,7 @@ spring-boot/spring-boot-project/spring-boot-autoconfigure/src/main/resources/MET
 
 ```java
    Assert.notEmpty(configurations, "No auto configuration classes found in META-INF/spring.factories. If you "
-                + "are using a custom packaging, make sure that file is correct.");COPY
+                + "are using a custom packaging, make sure that file is correct."); 
 ```
 
 这个断言的意思是，**configurations必须非空**，否则就打印一段话，`No auto configuration classes found in META-INF/spring.factories`，我们把这个逻辑反过来想想。如果这个集合不为空，是不是就代表找到了这个spring.factories并且会去加载这个文件中的内容呢？
@@ -569,7 +573,7 @@ public class RabbitAutoConfiguration {
 2. 通过 SpringFactoriesLoader 最终加载`META-INF/spring.factories`中的自动配置类实现自动装配
    1. 整个J2EE的整体解决方案和自动配置都在`springboot-autoconfigure`的jar包中
    2. **它将所有需要导入的组件以全类名的方式返回 ， 这些组件就会被添加到容器中 ；**
-   3. 它会给容器中导入非常多的自动配置类 （`xxxAutoConfiguration`）, 就是给容器中导入这个场景需要的所有组件 ， 并配置好这些组件 
+   3. 它会给容器中导入非常多的自动配置类 (`xxxAutoConfiguration`), 就是给容器中导入这个场景需要的所有组件 ， 并配置好这些组件 
 3. 通过`@Conditional`注解按需加载的配置类
 4. 想要其生效必须引入`spring-boot-starter-xxx`包实现起步依赖
 
@@ -577,7 +581,7 @@ public class RabbitAutoConfiguration {
 
 ## 五、约定大于配置 解析
 
-开箱即用的原理说完了，约定大于配置就比较好理解了。其实约定大于配置就是开箱即用中那些自动配置的细节。说的具体点就是：**我们的配置文件（.yml）应该放在哪个目录下**，**配置文件的命名规范**，**项目启动时扫描的Bean**，**组件的默认配置是什么样的（比如SpringMVC的视图解析器）**等等等等这一系列的东西，都可以被称为**约定**，下面就来一点一点地说一下SpringBoot中的“约定”。
+开箱即用的原理说完了，约定大于配置就比较好理解了。其实约定大于配置就是开箱即用中那些自动配置的细节。说的具体点就是：**我们的配置文件(.yml)应该放在哪个目录下**，**配置文件的命名规范**，**项目启动时扫描的Bean**，**组件的默认配置是什么样的(比如SpringMVC的视图解析器)**等等等等这一系列的东西，都可以被称为**约定**，下面就来一点一点地说一下SpringBoot中的“约定”。
 
 ### maven目录结构的约定
 
@@ -971,9 +975,9 @@ spring.factories支持的key 以及扩展点顺序 参看：[Spring boot源码�
 
 ## 参看：
 
-- [淘宝一面：“说一下 Spring Boot 自动装配原理呗？” ](https://www.cnblogs.com/javaguide/p/springboot-auto-config.html) （详细分析了SpringBoot自动装配的原理）
-- [你能说出SpringBoot自动装配的原理吗-吴师兄编程网](https://www.cxyxiaowu.com/18054.html)  （非常完善）
-- [SpringBoot 究竟是如何跑起来的?](https://zhuanlan.zhihu.com/p/54146400) （文章很好，分析的很调理。但缺少一些总结，跑起来的步骤是什么没有细说。）
+- [淘宝一面：“说一下 Spring Boot 自动装配原理呗？” ](https://www.cnblogs.com/javaguide/p/springboot-auto-config.html) (详细分析了SpringBoot自动装配的原理)
+- [你能说出SpringBoot自动装配的原理吗-吴师兄编程网](https://www.cxyxiaowu.com/18054.html)  (非常完善)
+- [SpringBoot 究竟是如何跑起来的?](https://zhuanlan.zhihu.com/p/54146400) (文章很好，分析的很调理。但缺少一些总结，跑起来的步骤是什么没有细说。)
 - [SpringBoot：认认真真梳理一遍自动装配原理 ](https://zhuanlan.zhihu.com/p/95217578) 
 - [一文了解ConfigurationConditon接口](https://www.cxyxiaowu.com/18023.html)
 
