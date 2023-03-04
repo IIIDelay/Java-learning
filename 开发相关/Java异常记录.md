@@ -43,3 +43,28 @@ Cause: org.postgresql.util.PSQLException: ��������: �û� "po
 > 解决：
 >
 > * 数据的username，名称书写错误，非编码问题
+
+## Maven
+
+#### 1. maven工程输入OUT文件夹
+
+> 子模块工程: 打包不能有 pom
+
+
+
+## SpringCloud
+
+#### 1. bootstrap.yaml异常
+
+* 异常描述
+
+```
+Add a spring.config.import=nacos: property to your configuration
+```
+
+* 解决
+
+```
+maven引入 bootstrap 依赖
+```
+
