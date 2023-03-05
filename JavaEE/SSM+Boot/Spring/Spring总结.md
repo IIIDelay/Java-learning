@@ -254,29 +254,48 @@ public Person personPrototype() {
 
 ### Bean的生命周期
 
-![Bean的生命周期](images/Spring%E6%80%BB%E7%BB%93/202109071618798.jpeg)
+> Spring IOC 中Bean的生命周期大致分为四个阶段：**实例化**(Instantiation)、**属性赋值**(Populate)、**初始化**(Initialization)、**销毁**(Destruction)
 
-1. Spring 启动，查找并加载需要被 Spring 管理的 Bean，并实例化 Bean。
+> Bean的初始化、Bean 的生存期和Bean的销毁4个部分。其中Bean定义过程大致如下。
+>
+> * Spring通过我们的配置， 如@ComponentScan定义的扫描路径去找到带有@Component的类，
+>   这个过程就是一个资源定位的过程。
+> * 一旦找到了资源，那么它就开始解析，并且将定义的信息保存起来。注意，此时还没有初始
+>   化Bean,也就没有Bean的实例，它有的仅仅是Bean的定义。
+> * 然后就会把Bean定义发布到Spring IoC容器中。此时，IoC 容器也只有Bean的定义，还是
+>   没有Bean的实例生成。
+>
+> 完成了这3步只是一个资源定位并将Bean的定义发布到IoC容器的过程，还没有Bean实例的
+> 生成，更没有完成依赖注入。在默认的情况下，Spring 会继续去完成Bean的实例化和依赖注入，这
+> 样从IoC容器中就可以得到一个依赖注入完成的Bean。但是，有些Bean会受到变化因素的影响，这
+> 时我们倒希望是取出Bean的时候完成初始化和依赖注入，换句话说就是让那些Bean只是将定义发
+> 布到IoC容器而不做实例化和依赖注入，当我们取出来的时候才做初始化和依赖注入等操作。
 
-2. 利用依赖注入完成 Bean 中所有属性值的配置注入。
+* Spring Bean的初始化流程
 
-3. 如果 Bean 实现了 BeanNameAware 接口，则 Spring 调用 Bean 的 setBeanName() 方法传入当前 Bean 的 id 值。
+![image-20230305153157317](images/Spring%E6%80%BB%E7%BB%93/image-20230305153157317.png)
 
-4. 如果 Bean 实现了 BeanFactoryAware 接口，则 Spring 调用 setBeanFactory() 方法传入当前工厂实例的引用。
+* Spring bean生命周期
 
-5. 如果 Bean 实现了 ApplicationContextAware 接口，则 Spring 调用 setApplicationContext() 方法传入当前 ApplicationContext 实例的引用。
+![image-20230305153252288](images/Spring%E6%80%BB%E7%BB%93/image-20230305153252288.png)
 
-6. 如果 Bean 实现了 [BeanPostProcessor] 接口，则 Spring 调用该接口的预初始化方法 postProcessBeforeInitialzation() 对 Bean 进行加工操作，此处非常重要，Spring 的 AOP 就是利用它实现的。
+![2w字搞懂Spring Bean的一生_spring_12](images/Spring%E6%80%BB%E7%BB%93/resize,m_fixed,w_1184.webp)
 
-7. 如果 Bean 实现了 InitializingBean 接口，则 Spring 将调用 afterPropertiesSet() 方法。
 
-8. 如果在配置文件中通过 init-method 属性指定了初始化方法，则调用该初始化方法。
 
-9. 如果 [BeanPostProcessor ]和 Bean 关联，则 Spring 将调用该接口的初始化方法 postProcessAfterInitialization()。此时，Bean 已经可以被应用系统使用了。
-
-10. 如果在 中指定了该 Bean 的作用域为 singleton，则将该 Bean 放入 Spring IoC 的缓存池中，触发 Spring 对该 Bean 的生命周期管理； 如果在 中指定了该 Bean 的作用域为 prototype，则将该 Bean 交给调用者，调用者管理该 Bean 的生命周期，Spring 不再管理该 Bean。
-
-11. 如果 Bean 实现了 DisposableBean 接口，则 Spring 会调用 destory() 方法销毁 Bean；如果在配置文件中通过 destory-method 属性指定了 Bean 的销毁方法，则 Spring 将调用该方法对 Bean 进行销毁。
+> Bean 生命周期的整个执行过程描述如下。
+>
+> 1. 根据配置情况调用 Bean 构造方法或工厂方法实例化 Bean。
+> 2. 利用依赖注入完成 Bean 中所有属性值的配置注入。
+> 3. 如果 Bean 实现了 BeanNameAware 接口，则 Spring 调用 Bean 的 setBeanName() 方法传入当前 Bean 的 id 值。
+> 4. 如果 Bean 实现了 BeanFactoryAware 接口，则 Spring 调用 setBeanFactory() 方法传入当前工厂实例的引用。
+> 5. 如果 Bean 实现了 ApplicationContextAware 接口，则 Spring 调用 setApplicationContext() 方法传入当前 ApplicationContext 实例的引用。
+> 6. 如果 BeanPostProcessor 和 Bean 关联，则 Spring 将调用该接口的预初始化方法 postProcessBeforeInitialzation() 对 Bean 进行加工操作，此处非常重要，Spring 的 AOP 就是利用它实现的。
+> 7. 如果 Bean 实现了 InitializingBean 接口，则 Spring 将调用 afterPropertiesSet() 方法。
+> 8. 如果在配置文件中通过 init-method 属性指定了初始化方法，则调用该初始化方法。
+> 9. 如果 BeanPostProcessor 和 Bean 关联，则 Spring 将调用该接口的初始化方法 postProcessAfterInitialization()。此时，Bean 已经可以被应用系统使用了。
+> 10. 如果在 <bean> 中指定了该 Bean 的作用范围为 scope="singleton"，则将该 Bean 放入 Spring IoC 的缓存池中，将触发 Spring 对该 Bean 的生命周期管理；如果在 <bean> 中指定了该 Bean 的作用范围为 scope="prototype"，则将该 Bean 交给调用者，调用者管理该 Bean 的生命周期，Spring 不再管理该 Bean。
+> 11. 如果 Bean 实现了 DisposableBean 接口，则 Spring 会调用 destory() 方法将 Spring 中的 Bean 销毁；如果在配置文件中通过 destory-method 属性指定了 Bean 的销毁方法，则 Spring 将调用该方法对 Bean 进行销毁。
 
 ### 单例bean的线程安全问题
 
