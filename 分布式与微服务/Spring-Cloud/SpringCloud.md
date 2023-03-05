@@ -1378,8 +1378,6 @@ select id, name, since from product where id = 1;
     
 ```
 
-1
-
 得到后镜像：
 
 | id   | name | since |
@@ -1431,55 +1429,10 @@ select id, name, since from product where id = 1;
 		"sqlType": "UPDATE"
 	}],
 	"xid": "xid:xxx"
-}
- 
-         
-    
+}  
 ```
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
+
 
 1. 提交前，向 TC 注册分支：申请 `product` 表中，主键值等于 1 的记录的 **全局锁** 。
 2. 本地事务提交：业务数据的更新和前面步骤中生成的 UNDO LOG 一并提交。
@@ -1494,12 +1447,7 @@ select id, name, since from product where id = 1;
 
 ```sql
 update product set name = 'TXC' where id = 1;
- 
-         
-    
 ```
-
-1
 
 1. 提交本地事务。并把本地事务的执行结果（即分支事务回滚的结果）上报给 TC。
 
@@ -1540,24 +1488,9 @@ CREATE TABLE `undo_log` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
- 
-         
-    
 ```
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
+
 
 ### TCC 模式
 
