@@ -1,13 +1,13 @@
 ## 核心概念
 
-- **NameServer**：可以理解为是一个注册中心，主要是用来保存topic路由信息，管理Broker。在NameServer的集群中，NameServer与NameServer之间是没有任何通信的。
-- **Broker**：核心的一个角色，主要是用来保存消息的，在启动时会向NameServer进行注册。Broker实例可以有很多个，相同的BrokerName可以称为一个Broker组，每个Broker组只保存一部分消息。
-- **topic**：可以理解为一个消息的集合的名字，一个topic可以分布在不同的Broker组下。
-- **队列（queue）**：一个topic可以有很多队列，默认是一个topic在同一个Broker组中是4个。如果一个topic现在在2个Broker组中，那么就有可能有8个队列。
-- **生产者**：生产消息的一方就是生产者
-- **生产者组**：一个生产者组可以有很多生产者，只需要在创建生产者的时候指定生产者组，那么这个生产者就在那个生产者组
-- **消费者**：用来消费生产者消息的一方
-- **消费者组**：跟生产者一样，每个消费者都有所在的消费者组，一个消费者组可以有很多的消费者，不同的消费者组消费消息是互不影响的。
+> - **NameServer**：可以理解为是一个注册中心，主要是用来保存topic路由信息，管理Broker。在NameServer的集群中，NameServer与NameServer之间是没有任何通信的。
+> - **Broker**：核心的一个角色，主要是用来保存消息的，在启动时会向NameServer进行注册。Broker实例可以有很多个，相同的BrokerName可以称为一个Broker组，每个Broker组只保存一部分消息。
+> - **topic**：可以理解为一个消息的集合的名字，一个topic可以分布在不同的Broker组下。
+> - **队列(queue)**：一个topic可以有很多队列，默认是一个topic在同一个Broker组中是4个。如果一个topic现在在2个Broker组中，那么就有可能有8个队列。
+> - **生产者**：生产消息的一方就是生产者
+> - **生产者组**：一个生产者组可以有很多生产者，只需要在创建生产者的时候指定生产者组，那么这个生产者就在那个生产者组
+> - **消费者**：用来消费生产者消息的一方
+> - **消费者组**：跟生产者一样，每个消费者都有所在的消费者组，一个消费者组可以有很多的消费者，不同的消费者组消费消息是互不影响的。
 
 ## 消息诞生与发送
 
@@ -33,7 +33,7 @@ SendResult sendResult = producer.send(msg);
 
 #### 路由表
 
-当Broker在启动的过程中，Broker就会往NameServer注册自己这个Broker的信息，这些信息就包括自身所在服务器的ip和端口，还有就是自己这个Broker有哪些topic和对应的队列信息，这些信息就是路由信息，后面就统一称为路由表。
+当Broker在启动的过程中，Broker就会往NameServer注册自己这个Broker的信息，这些信息就包括自身所在服务器的ip和端口，还有就是自己这个Broker有哪些topic和对应的队列信息，这些信息就 表。
 
 ![图片](images/MQ%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/640.png)Broker向NameServer注册
 
@@ -43,7 +43,7 @@ SendResult sendResult = producer.send(msg);
 
 好了通过上一节我们就明白了，原来生产者会从NameServer拉取到Broker的路由表的信息，这样生产者就知道了topic对应的队列的信息了。
 
-但是由于一个topic可能会有很多的队列，那么应该将消息发送到哪个队列上呢？
+但是由于一个topic可能会有很多的队列，那么应          
 
 ![图片](images/MQ%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/640-1678879758917-1.png)
 
@@ -80,7 +80,7 @@ MessageQueueSelector RocketMQ也提供了三种实现
 
 - 随机算法
 - Hash算法
-- 根据机房选择算法（空实现）
+- 根据机房选择算法(空实现)
 
 #### 其它特殊情况处理
 
@@ -146,13 +146,13 @@ producer.setRetryTimesWhenSendFailed(10);
 
 ###### mmap()
 
-mmap（memory map）是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。
+mmap(memory map)是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。
 
 简单地说就是内核缓冲区和应用缓冲区共享，从而减少了从读缓冲区到用户缓冲区的一次CPU拷贝。
 
 比如基于mmap，上述的IO读写模型就可以变成这样。
 
-![图片](images/MQ%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/640-1678879758917-3.png)
+![图片](images/MQ%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/640-1678879758917-3.png)                                                 
 
 基于mmap IO读写其实就变成mmap + write的操作，也就是用mmap替代传统IO中的read操作。
 
@@ -187,7 +187,7 @@ channel.transferTo(position, len, target);
 
 通过FileChannel的transferTo方法即可实现。
 
-transferTo方法（sendfile）主要是用于文件传输，比如将文件传输到另一个文件，又或者是网络。
+transferTo方法(sendfile)主要是用于文件传输，比如将文件传输到另一个文件，又或者是网络。
 
 在如上代码中，并没有文件的读写操作，而是直接将文件的数据传输到target目标缓冲区，也就是说，sendfile是无法知道文件的具体的数据的；但是mmap不一样，他是可以修改内核缓冲区的数据的。假设如果需要对文件的内容进行修改之后再传输，只有mmap可以满足。
 
@@ -258,7 +258,7 @@ RocketMQ提供了两种Broker的高可用模式
 
 #### 主从同步模式
 
-在主从同步模式下，在启动的时候需要在配置文件中指定BrokerId，在同一个Broker组中，BrokerId为0的是主节点（master），其余为从节点(slave)。
+在主从同步模式下，在启动的时候需要在配置文件中指定BrokerId，在同一个Broker组中，BrokerId为0的是主节点(master)，其余为从节点(slave)。
 
 当生产者将消息写入到主节点是，主节点会将消息内容同步到从节点机器上，这样一旦主节点宕机，从节点机器依然可以提供服务。
 
@@ -289,7 +289,7 @@ topic等数据是从节点每隔10s钟主动去主节点拉取，然后更新本
 
 ## 消息消费
 
-终于，在生产者成功发送消息到Broker，Broker在成功存储消息之后，消费者要消费消息了。
+终于，在生产者成功发送消息到Broker，Brok                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               er在成功存储消息之后，消费者要消费消息了。
 
 消费者在启动的时候会从NameSrever拉取消费者订阅的topic的路由信息，这样就知道订阅的topic有哪些queue，以及queue所在Broker的地址信息。
 
@@ -352,11 +352,11 @@ consumer.setMessageModel(MessageModel.BROADCASTING);
 
 ConsumeQueue也是由多个文件组成，每个文件默认是存30万条数据。
 
-插入ConsumeQueue中的每条数据由20个字节组成，包含3部分信息，消息在CommitLog的起始位置（8个字节），消息在CommitLog存储的长度（8个字节），还有就是tag的hashCode（4个字节）。
+插入ConsumeQueue中的每条数据由20个字节组成，包含3部分信息，消息在CommitLog的起始位置(8个字节)，消息在CommitLog存储的长度(8个字节)，还有就是tag的hashCode(4个字节)。
 
 ![图片](images/MQ%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/640-1678879758917-9.png)
 
-所以当消费者从Broker拉取消息的时候，会告诉Broker拉取哪个队列（queueId）的消息、这个队列的哪个位置的消息（queueOffset）。
+所以当消费者从Broker拉取消息的时候，会告诉Broker拉取哪个队列(queueId)的消息、这个队列的哪个位置的消息(queueOffset)。
 
 queueOffset就是指上图中ConsumeQueue一条数据的编号，单调递增的。
 
